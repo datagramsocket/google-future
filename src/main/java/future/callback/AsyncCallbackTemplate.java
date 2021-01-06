@@ -1,4 +1,4 @@
-package com.infinova.future.callback;
+package future.callback;
 
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
