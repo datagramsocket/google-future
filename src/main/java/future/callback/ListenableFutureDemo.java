@@ -69,5 +69,36 @@ public class ListenableFutureDemo {
         }
     }
 
-    public void test3(){}
+    @Test
+    public void test3(){
+        ExecutorService executorService = Executors.newFixedThreadPool(3);
+        ListeningExecutorService listeningExecutorService = MoreExecutors.listeningDecorator(executorService);
+        ListenableFuture<String> listenableFuture = listeningExecutorService.submit(() -> {
+            System.out.println("thread id:" + Thread.currentThread().getId());
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return "abc";
+        });
+        Futures.addCallback(listenableFuture, new FutureCallback<String>() {
+            @Override
+            public void onSuccess(@Nullable String result) {
+                System.out.println("success thread id:" + Thread.currentThread().getId());
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+
+            }
+        }, executorService);
+        System.out.println("main thread id:" + Thread.currentThread().getId());
+        try {
+            System.in.read();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
